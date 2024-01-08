@@ -1,9 +1,9 @@
+"use client";
 import Link from "next/link";
 import React from "react";
 
 export default function Navbar() {
     return (
-        
         <div className="bg-gray-100 py-2 px-4 border-b border-gray-100 w-full">
             <div className="flex justify-between items-center">
                 <Link href="/">

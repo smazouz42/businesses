@@ -17,11 +17,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}  >
-        <main className='h-screen overflow-hidden'>
+      <body className={inter.className}>
+
+        <main>
+
           <Navbar />
-          {children}
         </main>
+        {children}
+
       </body>
     </html>
   )
