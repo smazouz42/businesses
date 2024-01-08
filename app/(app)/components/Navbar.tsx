@@ -11,11 +11,13 @@ export default function Navbar() {
                         <span className="text-gray-800">Fire Base </span>
                     </div>
                 </Link>
+                <Link href="/login">
                 <div className="space-x-4">
                     <button className="bg-black text-white px-3 py-2 rounded-md font-semibold">
-                        Sign In
+                        Log in
                     </button>
                 </div>
+                </Link>
             </div>
         </div>
     );
