@@ -1,46 +1,45 @@
-"use client";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
-import { useDispatch, useSelector } from "react-redux";
-
-
+import { useDispatch } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
 
 export default function Login() {
+    const email = useSelector((state: any) => state);
     const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     );
-    
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
+    const router = useRouter();
 
     const login = async () => {
+        console.log("data of the user login", email);
         const { error, data } = await supabase.auth.signInWithPassword({
             email: username,
             password: password,
         });
         if (error) {
-            console.log("fdfd ", error);
-        }
-        else {
-
+            console.log(error);
+            toast.error("Invalid login credentials");
+        } else {
             const authToken = data.session.access_token;
-            console.log(await supabase.auth.getUser());
             dispatch({ type: "setTheme", payload: username });
-            console.log(username);
             document.cookie = `authToken=${authToken}; expires=Fri, 31 Dec 2024 23:59:59 GMT; path=/`;
             router.push('/dashboard');
         }
     }
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // router.push('/');
         login();
     };
-    const router = useRouter();
+
     return (
         <div className="bg-gray-800 flex flex-col justify-center h-screen">
             <form
@@ -80,6 +79,7 @@ export default function Login() {
                     SIGN IN
                 </button>
             </form>
+            <ToastContainer />
         </div>
     );
 }
