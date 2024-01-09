@@ -3,42 +3,51 @@ import React from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
+import { useDispatch, useSelector } from "react-redux";
+
+
 
 export default function Login() {
     const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     );
+    
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [data , setData] = useState([]);
+    const dispatch = useDispatch();
+
     const login = async () => {
-        
         const { error, data } = await supabase.auth.signInWithPassword({
             email: username,
             password: password,
         });
         if (error) {
-            console.log("error ", error);
+            console.log("fdfd ", error);
         }
         else {
-            console.log("data ", data);
-            rounter.push('/dashboard');
+
+            const authToken = data.session.access_token;
+            console.log(await supabase.auth.getUser());
+            dispatch({ type: "setTheme", payload: username });
+            console.log(username);
+            document.cookie = `authToken=${authToken}; expires=Fri, 31 Dec 2024 23:59:59 GMT; path=/`;
+            router.push('/dashboard');
         }
     }
     const handleSubmit = (e) => {
         e.preventDefault();
-        // rounter.push('/');
+        // router.push('/');
         login();
     };
-    const rounter = useRouter();
+    const router = useRouter();
     return (
         <div className="bg-gray-800 flex flex-col justify-center h-screen">
             <form
                 className="max-w-[400px] w-full mx-auto bg-gray-900 p-8 px-8 rounded-lg"
                 onSubmit={handleSubmit}
             >
-                <h2 className="text-4xl dark:text-white font-bold text-center">
+                <h2 className="text-4xl text-gray-500 font-bold text-center ">
                     LOG IN
                 </h2>
                 <div className="flex flex-col text-gray-400 py-2">
